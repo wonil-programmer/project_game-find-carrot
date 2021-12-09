@@ -61,13 +61,17 @@ body {
 
 /* Bottom Section */
 .bottom__section {
-  /* width: 100%; */
+  width: 100%;
   height: 50%;
-  /* position: absolute; */
+  position: relative;
 }
 
 .bug {
-  position: relative;
-  left: 100px;
-  top: 100px;
+  font-size: 10px;
+  position: absolute;
+}
+
+.carrot {
+  font-size: 10px;
+  position: absolute;
 }
