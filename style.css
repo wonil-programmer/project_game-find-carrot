@@ -31,7 +31,8 @@ body {
 }
 
 .playBtn {
-  background-color: whitesmoke;
+  background-color: beige;
+  border: 3px solid black;
   width: 50px;
   height: 50px;
   border-radius: 10px;
@@ -50,12 +51,15 @@ body {
 }
 
 .counter {
-  background-color: yellow;
+  background-color: orange;
   width: 50px;
   height: 50px;
   margin: 10px;
+  border: 3px solid black;
   border-radius: 50%;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .count {
@@ -83,4 +87,8 @@ body {
 .carrot {
   font-size: 10px;
   position: absolute;
+}
+
+.carrot.invisible {
+  display: none;
 }

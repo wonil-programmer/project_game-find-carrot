@@ -5,32 +5,50 @@ const playIcon = document.querySelector("#playIcon");
 const countNum = document.querySelector(".count");
 const btmSect = document.querySelector(".bottom__section");
 
-const initSum = Math.ceil(Math.random() * 10);
-console.log(initSum);
-// initiate the Game Setting
-function initSetting() {
+// Initiate the game setting
+let initSum = Math.ceil(Math.random() * 10 + 5);
+function initAssem(initSum) {
   countNum.innerHTML = `${initSum}`;
-  console.log(countNum);
-  controlBtn.addEventListener("click", () => {
-    playIcon.classList.remove("fa-play");
-    playIcon.classList.add("fa-square");
-    for (let i = 0; i < initSum; i++) {
-      btmSect.appendChild(createBug(i));
-      btmSect.appendChild(createCarrot(i));
-    }
+  for (let i = 0; i < initSum; i++) {
+    btmSect.appendChild(createCarrot(i));
+    btmSect.appendChild(createBug(i));
+  }
+  const carrots = document.querySelectorAll(".carrot");
+  return carrots;
+}
 
-    const bugs = document.querySelectorAll(".bug");
-    console.log(bugs.length);
+// Start the game
+controlBtn.addEventListener("click", () => {
+  playIcon.classList.remove("fa-play");
+  playIcon.classList.add("fa-square");
+  const carrotsNode = initAssem(initSum);
+  removeCarrots(carrotsNode);
+  removeBugs();
+});
 
-    bugs.forEach((bug) => {
-      bug.addEventListener("click", () => {
-        bug.classList.add("invisible");
-      });
+// Remove existing bugs
+function removeBugs() {
+  const bugs = document.querySelectorAll(".bug");
+  bugs.forEach((bug) => {
+    bug.addEventListener("click", () => {
+      bug.classList.add("invisible");
     });
   });
 }
 
-// function btnStat() {}
+// Remove existing carrots
+function removeCarrots(carrotsNode) {
+  carrotsNode.forEach((carrot) => {
+    carrot.addEventListener("click", () => {
+      carrot.classList.add("invisible");
+      initSum--;
+      countNum.innerHTML = `${initSum}`;
+      if (initSum == 0) {
+        console.log("completed");
+      }
+    });
+  });
+}
 
 // create bug icons
 function createBug(bugNum) {
@@ -68,5 +86,3 @@ function createCarrot(carrotNum) {
   carrot.style.top = `${randomHeight}px`;
   return carrot;
 }
-
-initSetting();
