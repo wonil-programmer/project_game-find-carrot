@@ -4,9 +4,11 @@ const controlBtn = document.querySelector(".playBtn");
 const playIcon = document.querySelector("#playIcon");
 const countNum = document.querySelector(".count");
 const btmSect = document.querySelector(".bottom__section");
+const retryBtn = document.querySelector(".retryBtn");
+const result = document.querySelector(".result");
+const message = document.querySelector(".message");
 
-// Initiate the game setting
-// let count = Math.ceil(Math.random() * 5 + 5);
+// placement(): arrange each items in for loop
 function placement(count) {
   countNum.innerHTML = `${count}`;
   for (let i = 0; i < count; i++) {
@@ -16,13 +18,20 @@ function placement(count) {
   const carrots = document.querySelectorAll(".carrot");
   return carrots;
 }
-function resetSetting() {
-  countNum.innerHTML = "?";
-  btmSect.innerHTML = "";
+
+function initSetting() {
+  // controlBtn.classList.remove("invisible");
+  controlBtn.style.opacity = 1;
+  result.classList.add("invisible");
   playIcon.classList.remove("fa-square");
   playIcon.classList.add("fa-play");
-  let count = Math.ceil(Math.random() * 5 + 5);
-  return count;
+  countNum.innerHTML = "?";
+  console.log();
+  let items = document.querySelectorAll("[data-id]");
+  console.log(items);
+  items.forEach((item) => {
+    btmSect.removeChild(item);
+  });
 }
 
 // Start the game
@@ -35,6 +44,10 @@ controlBtn.addEventListener("click", () => {
   removeBugs();
 });
 
+retryBtn.addEventListener("click", () => {
+  initSetting();
+});
+
 // Remove existing bugs
 function removeBugs() {
   const bugs = document.querySelectorAll(".bug");
@@ -43,7 +56,10 @@ function removeBugs() {
       var bugPullAudio = new Audio("./sound/bug_pull.mp3");
       bugPullAudio.play();
       bug.classList.add("invisible");
-      resetSetting();
+      result.classList.remove("invisible");
+      // controlBtn.classList.add("invisible");
+      controlBtn.style.opacity = 0;
+      message.innerText = "YOU LOST";
     });
   });
 }
@@ -61,14 +77,16 @@ function removeCarrots(carrots, count) {
         console.log("completed");
         var winAudio = new Audio("./sound/game_win.mp3");
         winAudio.play();
-        resetSetting();
-        // let count = Math.ceil(Math.random() * 5 + 5);
+        result.classList.remove("invisible");
+        // controlBtn.classList.add("invisible");
+        controlBtn.style.opacity = 1;
+        message.innerText = "YOU WON!";
       }
     });
   });
 }
 
-// create bug icons
+// create bug items
 function createBug(bugNum) {
   const bug = document.createElement("img");
   bug.setAttribute("class", "bug");
@@ -79,13 +97,12 @@ function createBug(bugNum) {
     Math.random() * (btmSect.getBoundingClientRect().width - bug.width);
   const randomHeight =
     Math.random() * (btmSect.getBoundingClientRect().height - bug.height);
-
   bug.style.left = `${randomWidth}px`;
   bug.style.top = `${randomHeight}px`;
   return bug;
 }
 
-// create carrot icons
+// create carrot items
 function createCarrot(carrotNum) {
   const carrot = document.createElement("img");
   carrot.setAttribute("class", "carrot");
@@ -96,7 +113,6 @@ function createCarrot(carrotNum) {
     Math.random() * (btmSect.getBoundingClientRect().width - carrot.width);
   const randomHeight =
     Math.random() * (btmSect.getBoundingClientRect().height - carrot.height);
-
   carrot.style.left = `${randomWidth}px`;
   carrot.style.top = `${randomHeight}px`;
   return carrot;
