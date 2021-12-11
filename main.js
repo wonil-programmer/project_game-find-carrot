@@ -31,6 +31,8 @@ function removeBugs() {
   const bugs = document.querySelectorAll(".bug");
   bugs.forEach((bug) => {
     bug.addEventListener("click", () => {
+      var bugPullAudio = new Audio("./sound/bug_pull.mp3");
+      bugPullAudio.play();
       bug.classList.add("invisible");
     });
   });
@@ -40,11 +42,15 @@ function removeBugs() {
 function removeCarrots(carrotsNode) {
   carrotsNode.forEach((carrot) => {
     carrot.addEventListener("click", () => {
+      var carrotPullAudio = new Audio("./sound/carrot_pull.mp3");
+      carrotPullAudio.play();
       carrot.classList.add("invisible");
       initSum--;
       countNum.innerHTML = `${initSum}`;
       if (initSum == 0) {
         console.log("completed");
+        var winAudio = new Audio("./sound/game_win.mp3");
+        winAudio.play();
       }
     });
   });
