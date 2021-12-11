@@ -30,15 +30,19 @@ body {
   height: 50%;
 }
 
-.start {
+.playBtn {
+  background-color: whitesmoke;
   width: 50px;
   height: 50px;
   border-radius: 10px;
   margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.start i {
-  font-size: 30px;
+#playIcon {
+  font-size: 28px;
 }
 
 .timer {
@@ -69,6 +73,11 @@ body {
 .bug {
   font-size: 10px;
   position: absolute;
+  z-index: 1;
+}
+
+.bug.invisible {
+  display: none;
 }
 
 .carrot {
