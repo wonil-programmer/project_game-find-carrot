@@ -20,7 +20,6 @@ function placement(count) {
 }
 
 function initSetting() {
-  // controlBtn.classList.remove("invisible");
   controlBtn.style.opacity = 1;
   result.classList.add("invisible");
   playIcon.classList.remove("fa-square");
@@ -28,7 +27,6 @@ function initSetting() {
   countNum.innerHTML = "?";
   console.log();
   let items = document.querySelectorAll("[data-id]");
-  console.log(items);
   items.forEach((item) => {
     btmSect.removeChild(item);
   });
@@ -57,7 +55,6 @@ function removeBugs() {
       bugPullAudio.play();
       bug.classList.add("invisible");
       result.classList.remove("invisible");
-      // controlBtn.classList.add("invisible");
       controlBtn.style.opacity = 0;
       message.innerText = "YOU LOST";
     });
@@ -78,7 +75,6 @@ function removeCarrots(carrots, count) {
         var winAudio = new Audio("./sound/game_win.mp3");
         winAudio.play();
         result.classList.remove("invisible");
-        // controlBtn.classList.add("invisible");
         controlBtn.style.opacity = 1;
         message.innerText = "YOU WON!";
       }
