@@ -1,7 +1,10 @@
 "use strict";
 
-const controlBtn = document.querySelector(".playBtn");
-const playIcon = document.querySelector("#playIcon");
+let timer = undefined;
+
+const controlBtn = document.querySelector(".controlBtn");
+const playSquare = document.querySelector("#playSquare");
+const gameTimer = document.querySelector(".gameTimer");
 const countNum = document.querySelector(".count");
 const btmSect = document.querySelector(".bottom__section");
 const retryBtn = document.querySelector(".retryBtn");
@@ -22,10 +25,10 @@ function placement(count) {
 function initSetting() {
   controlBtn.style.opacity = 1;
   result.classList.add("invisible");
-  playIcon.classList.remove("fa-square");
-  playIcon.classList.add("fa-play");
-  countNum.innerHTML = "?";
-  console.log();
+  playSquare.classList.remove("fa-square");
+  playSquare.classList.add("fa-play");
+  gameTimer.innerText = "0 : ?";
+  countNum.innerText = "?";
   let items = document.querySelectorAll("[data-id]");
   items.forEach((item) => {
     btmSect.removeChild(item);
@@ -34,14 +37,53 @@ function initSetting() {
 
 // Start the game
 controlBtn.addEventListener("click", () => {
+  if (playSquare.classList.contains("fa-play")) {
+    startGame();
+  } else {
+    stopGame();
+  }
+});
+
+// Stop the game
+function stopGame() {
+  stopGameTimer();
+  retryPopup();
+}
+
+function stopGameTimer() {
+  clearInterval(timer);
+}
+
+// Start the game
+function startGame() {
   let count = Math.ceil(Math.random() * 5 + 5);
-  playIcon.classList.remove("fa-play");
-  playIcon.classList.add("fa-square");
+  playSquare.classList.remove("fa-play");
+  playSquare.classList.add("fa-square");
+  startGameTimer(count);
   const carrotsNode = placement(count);
   removeCarrots(carrotsNode, count);
   removeBugs();
-});
+}
 
+function startGameTimer(GAME_DURATION_SEC) {
+  let remainingTimeSec = GAME_DURATION_SEC;
+  updateTimerText(remainingTimeSec);
+  timer = setInterval(() => {
+    if (remainingTimeSec <= 0) {
+      clearInterval(timer);
+      return;
+    }
+    updateTimerText(--remainingTimeSec);
+  }, 1000);
+}
+
+function updateTimerText(time) {
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+  gameTimer.innerText = `${minutes} : ${seconds}`;
+}
+
+// retry the game
 retryBtn.addEventListener("click", () => {
   initSetting();
 });
@@ -54,9 +96,8 @@ function removeBugs() {
       var bugPullAudio = new Audio("./sound/bug_pull.mp3");
       bugPullAudio.play();
       bug.classList.add("invisible");
-      result.classList.remove("invisible");
-      controlBtn.style.opacity = 0;
-      message.innerText = "YOU LOST";
+      lostPopup();
+      stopGameTimer();
     });
   });
 }
@@ -74,9 +115,8 @@ function removeCarrots(carrots, count) {
         console.log("completed");
         var winAudio = new Audio("./sound/game_win.mp3");
         winAudio.play();
-        result.classList.remove("invisible");
-        controlBtn.style.opacity = 1;
-        message.innerText = "YOU WON!";
+        wonPopup();
+        stopGameTimer();
       }
     });
   });
@@ -112,4 +152,20 @@ function createCarrot(carrotNum) {
   carrot.style.left = `${randomWidth}px`;
   carrot.style.top = `${randomHeight}px`;
   return carrot;
+}
+
+// Notify user won or lost or retry the game
+function wonPopup() {
+  result.classList.remove("invisible");
+  controlBtn.style.opacity = 0;
+  message.innerText = "YOU WON!";
+}
+function lostPopup() {
+  result.classList.remove("invisible");
+  controlBtn.style.opacity = 0;
+  message.innerText = "YOU LOST";
+}
+function retryPopup() {
+  result.classList.remove("invisible");
+  message.innerText = "RETRY?";
 }
