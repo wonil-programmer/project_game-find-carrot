@@ -42,6 +42,10 @@ body {
   align-items: center;
 }
 
+.controlBtn.invisible {
+  visibility: hidden;
+}
+
 #playSquare {
   font-size: 28px;
 }
@@ -84,12 +88,17 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 5;
+}
+
+.bottom__section.prevent {
+  z-index: 2;
 }
 
 .bug {
   font-size: 10px;
   position: absolute;
-  z-index: 1;
+  z-index: 3;
 }
 
 .bug.invisible {
@@ -99,6 +108,7 @@ body {
 .carrot {
   font-size: 10px;
   position: absolute;
+  z-index: 2;
 }
 
 .carrot.invisible {
@@ -115,7 +125,7 @@ body {
   align-items: center;
   justify-content: space-evenly;
   border-radius: 20px;
-  z-index: 2;
+  z-index: 4;
 }
 
 .result.invisible {

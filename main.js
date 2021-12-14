@@ -11,7 +11,7 @@ const retryBtn = document.querySelector(".retryBtn");
 const result = document.querySelector(".result");
 const message = document.querySelector(".message");
 
-// placement(): arrange each items in for loop
+// Arrange each items using for loop
 function placement(count) {
   countNum.innerHTML = `${count}`;
   for (let i = 0; i < count; i++) {
@@ -22,8 +22,10 @@ function placement(count) {
   return carrots;
 }
 
+// Initiate the game setting
 function initSetting() {
-  controlBtn.style.opacity = 1;
+  btmSect.classList.remove("prevent");
+  controlBtn.classList.remove("invisible");
   result.classList.add("invisible");
   playSquare.classList.remove("fa-square");
   playSquare.classList.add("fa-play");
@@ -47,6 +49,8 @@ controlBtn.addEventListener("click", () => {
 // Stop the game
 function stopGame() {
   stopGameTimer();
+  var winAudio = new Audio("./sound/alert.wav");
+  winAudio.play();
   retryPopup();
 }
 
@@ -65,6 +69,7 @@ function startGame() {
   removeBugs();
 }
 
+// Start the game timer
 function startGameTimer(GAME_DURATION_SEC) {
   let remainingTimeSec = GAME_DURATION_SEC;
   updateTimerText(remainingTimeSec);
@@ -81,12 +86,12 @@ function updateTimerText(time) {
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
   gameTimer.innerText = `${minutes} : ${seconds}`;
+  if (gameTimer.innerText == "0 : 0") {
+    retryPopup();
+    var winAudio = new Audio("./sound/alert.wav");
+    winAudio.play();
+  }
 }
-
-// retry the game
-retryBtn.addEventListener("click", () => {
-  initSetting();
-});
 
 // Remove existing bugs
 function removeBugs() {
@@ -154,15 +159,20 @@ function createCarrot(carrotNum) {
   return carrot;
 }
 
+// retry the game
+retryBtn.addEventListener("click", () => {
+  initSetting();
+});
+
 // Notify user won or lost or retry the game
 function wonPopup() {
   result.classList.remove("invisible");
-  controlBtn.style.opacity = 0;
+  controlBtn.classList.add("invisible");
   message.innerText = "YOU WON!";
 }
 function lostPopup() {
   result.classList.remove("invisible");
-  controlBtn.style.opacity = 0;
+  controlBtn.classList.add("invisible");
   message.innerText = "YOU LOST";
 }
 function retryPopup() {
