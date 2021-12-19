@@ -98,7 +98,7 @@ body {
 .bug {
   font-size: 10px;
   position: absolute;
-  z-index: 3;
+  z-index: 0;
 }
 
 .bug.invisible {
@@ -108,7 +108,7 @@ body {
 .carrot {
   font-size: 10px;
   position: absolute;
-  z-index: 2;
+  z-index: 0;
 }
 
 .carrot.invisible {
@@ -116,16 +116,17 @@ body {
 }
 
 .result {
-  background-color: gray;
-  opacity: 0.8;
+  background-color: #80808090;
   width: 300px;
   height: 160px;
+  margin: auto;
+  transform: translateY(-150%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
   border-radius: 20px;
-  z-index: 4;
+  z-index: 1;
 }
 
 .result.invisible {
