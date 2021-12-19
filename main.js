@@ -15,8 +15,8 @@ const message = document.querySelector(".message");
 function placement(count) {
   countNum.innerHTML = `${count}`;
   for (let i = 0; i < count; i++) {
-    btmSect.appendChild(createItems("bug", i, "img/bug.png"));
-    btmSect.appendChild(createItems("carrot", i, "img/carrot.png"));
+    btmSect.appendChild(createCarrot(i));
+    btmSect.appendChild(createBug(i));
   }
   const carrots = document.querySelectorAll(".carrot");
   return carrots;
@@ -127,20 +127,36 @@ function removeCarrots(carrots, count) {
   });
 }
 
-// create items
-function createItems(itemName, itemNum, imgPath) {
-  const item = document.createElement("img");
-  item.setAttribute("class", itemName);
-  item.setAttribute("data-id", itemNum);
-  item.setAttribute("src", imgPath);
+// create bug items
+function createBug(bugNum) {
+  const bug = document.createElement("img");
+  bug.setAttribute("class", "bug");
+  bug.setAttribute("data-id", bugNum);
+  bug.setAttribute("src", "img/bug.png");
 
   const randomWidth =
-    Math.random() * (btmSect.getBoundingClientRect().width - item.width);
+    Math.random() * (btmSect.getBoundingClientRect().width - bug.width);
   const randomHeight =
-    Math.random() * (btmSect.getBoundingClientRect().height - item.height);
-  item.style.left = `${randomWidth}px`;
-  item.style.top = `${randomHeight}px`;
-  return item;
+    Math.random() * (btmSect.getBoundingClientRect().height - bug.height);
+  bug.style.left = `${randomWidth}px`;
+  bug.style.top = `${randomHeight}px`;
+  return bug;
+}
+
+// create carrot items
+function createCarrot(carrotNum) {
+  const carrot = document.createElement("img");
+  carrot.setAttribute("class", "carrot");
+  carrot.setAttribute("data-id", carrotNum);
+  carrot.setAttribute("src", "img/carrot.png");
+
+  const randomWidth =
+    Math.random() * (btmSect.getBoundingClientRect().width - carrot.width);
+  const randomHeight =
+    Math.random() * (btmSect.getBoundingClientRect().height - carrot.height);
+  carrot.style.left = `${randomWidth}px`;
+  carrot.style.top = `${randomHeight}px`;
+  return carrot;
 }
 
 // retry the game
