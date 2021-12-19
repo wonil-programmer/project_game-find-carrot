@@ -66,6 +66,8 @@ body {
   margin: 10px;
   text-align: center;
   line-height: 40px;
+  user-select: none;
+  cursor: auto;
 }
 
 .counter {
@@ -78,6 +80,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
+  cursor: auto;
 }
 
 .count {
@@ -95,22 +99,26 @@ body {
   align-items: center;
 }
 
-.bug {
-  font-size: 10px;
-  position: absolute;
-  z-index: 0;
+.bottom__section.deact {
+  pointer-events: none;
 }
 
-.bug.invisible {
-  display: none;
-}
-
+.bug,
 .carrot {
   font-size: 10px;
   position: absolute;
   z-index: 0;
+  cursor: grab;
+  user-select: none;
+  transition: transform 100ms ease-in;
 }
 
+.bug:hover,
+.carrot:hover {
+  transform: scale(1.1);
+}
+
+.bug.invisible,
 .carrot.invisible {
   display: none;
 }

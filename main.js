@@ -2,6 +2,8 @@
 
 let timer = undefined;
 
+const CARROT_SIZE = 80;
+const BUG_SIZE = 50;
 const controlBtn = document.querySelector(".controlBtn");
 const playSquare = document.querySelector("#playSquare");
 const gameTimer = document.querySelector(".gameTimer");
@@ -15,24 +17,26 @@ const message = document.querySelector(".message");
 function placement(count) {
   countNum.innerHTML = `${count}`;
   for (let i = 0; i < count; i++) {
-    btmSect.appendChild(createItems("bug", i, "img/bug.png"));
-    btmSect.appendChild(createItems("carrot", i, "img/carrot.png"));
+    btmSect.appendChild(createItems("bug", i, "img/bug.png", BUG_SIZE));
+    btmSect.appendChild(
+      createItems("carrot", i, "img/carrot.png", CARROT_SIZE)
+    );
   }
   const carrots = document.querySelectorAll(".carrot");
   return carrots;
 }
 
-// create items
-function createItems(itemName, itemNum, imgPath) {
+// create carrots and bugs as element
+function createItems(itemName, itemNum, imgPath, itemSize) {
   const item = document.createElement("img");
   item.setAttribute("class", itemName);
   item.setAttribute("data-id", itemNum);
   item.setAttribute("src", imgPath);
 
   const randomWidth =
-    Math.random() * (btmSect.getBoundingClientRect().width - item.width);
+    Math.random() * (btmSect.getBoundingClientRect().width - itemSize);
   const randomHeight =
-    Math.random() * (btmSect.getBoundingClientRect().height - item.height);
+    Math.random() * (btmSect.getBoundingClientRect().height - itemSize);
   item.style.left = `${randomWidth}px`;
   item.style.top = `${randomHeight}px`;
   return item;
@@ -40,20 +44,17 @@ function createItems(itemName, itemNum, imgPath) {
 
 // Initiate the game setting
 function initSetting() {
-  btmSect.classList.remove("prevent");
   controlBtn.classList.remove("invisible");
-  result.classList.add("invisible");
   playSquare.classList.remove("fa-square");
   playSquare.classList.add("fa-play");
   gameTimer.innerText = "0 : ?";
   countNum.innerText = "?";
-  let items = document.querySelectorAll("[data-id]");
-  items.forEach((item) => {
-    btmSect.removeChild(item);
-  });
+  btmSect.classList.remove("deact");
+  btmSect.innerHTML = "";
+  result.classList.add("invisible");
 }
 
-// Start the game
+// Start or stop the game
 controlBtn.addEventListener("click", () => {
   if (playSquare.classList.contains("fa-play")) {
     startGame();
@@ -61,18 +62,6 @@ controlBtn.addEventListener("click", () => {
     stopGame();
   }
 });
-
-// Stop the game
-function stopGame() {
-  stopGameTimer();
-  var winAudio = new Audio("./sound/alert.wav");
-  winAudio.play();
-  popUp("retry");
-}
-
-function stopGameTimer() {
-  clearInterval(timer);
-}
 
 // Start the game
 function startGame() {
@@ -103,10 +92,45 @@ function updateTimerText(time) {
   const seconds = time % 60;
   gameTimer.innerText = `${minutes} : ${seconds}`;
   if (gameTimer.innerText == "0 : 0") {
-    popUp("retry");
-    var winAudio = new Audio("./sound/alert.wav");
-    winAudio.play();
+    timeOver();
   }
+}
+
+// Alert when time is over
+function timeOver() {
+  popUp("retry");
+  var winAudio = new Audio("./sound/alert.wav");
+  btmSect.classList.add("deact");
+}
+
+// Stop the game
+function stopGame() {
+  stopGameTimer();
+  audioPlay("sound/alert.wav");
+  popUp("retry");
+  btmSect.classList.add("deact");
+}
+
+function stopGameTimer() {
+  clearInterval(timer);
+}
+
+// Remove existing carrots
+function removeCarrots(carrots, count) {
+  carrots.forEach((carrot) => {
+    carrot.addEventListener("click", () => {
+      carrot.classList.add("invisible");
+      audioPlay("sound/carrot_pull.mp3");
+      count--;
+      countNum.innerHTML = `${count}`;
+      if (count == 0) {
+        audioPlay("sound/game_win.mp3");
+        popUp("won");
+        stopGameTimer();
+        btmSect.classList.add("deact");
+      }
+    });
+  });
 }
 
 // Remove existing bugs
@@ -114,63 +138,33 @@ function removeBugs() {
   const bugs = document.querySelectorAll(".bug");
   bugs.forEach((bug) => {
     bug.addEventListener("click", () => {
-      var bugPullAudio = new Audio("./sound/bug_pull.mp3");
-      bugPullAudio.play();
       bug.classList.add("invisible");
+      audioPlay("sound/bug_pull.mp3");
       popUp("lost");
       stopGameTimer();
+      btmSect.classList.add("deact");
     });
   });
 }
 
-// Remove existing carrots
-function removeCarrots(carrots, count) {
-  carrots.forEach((carrot) => {
-    carrot.addEventListener("click", () => {
-      var carrotPullAudio = new Audio("./sound/carrot_pull.mp3");
-      carrotPullAudio.play();
-      carrot.classList.add("invisible");
-      count--;
-      countNum.innerHTML = `${count}`;
-      if (count == 0) {
-        console.log("completed");
-        var winAudio = new Audio("./sound/game_win.mp3");
-        winAudio.play();
-        popUp("won");
-        stopGameTimer();
-      }
-    });
-  });
-}
-
-// retry the game
+// Retry the game
 retryBtn.addEventListener("click", () => {
   initSetting();
 });
 
-// // Notify user won or lost or retry the game
-// function wonPopup() {
-//   result.classList.remove("invisible");
-//   controlBtn.classList.add("invisible");
-//   message.innerText = "YOU WON!";
-// }
-// function lostPopup() {
-//   result.classList.remove("invisible");
-//   controlBtn.classList.add("invisible");
-//   message.innerText = "YOU LOST";
-// }
-// function retryPopup() {
-//   result.classList.remove("invisible");
-//   message.innerText = "RETRY?";
-// }
+// Play an audio
+function audioPlay(audioPath) {
+  var audio = new Audio(audioPath);
+  audio.play();
+}
 
 // Popup contain the result
 function popUp(outcome) {
+  result.classList.remove("invisible");
   if (outcome == "won") {
     controlBtn.classList.add("invisible");
     message.innerText = "YOU WON!";
   } else if (outcome == "lost") {
-    result.classList.remove("invisible");
     controlBtn.classList.add("invisible");
     message.innerText = "YOU LOST";
   } else if (outcome == "retry") {
