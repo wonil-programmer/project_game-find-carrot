@@ -22,6 +22,22 @@ function placement(count) {
   return carrots;
 }
 
+// create items
+function createItems(itemName, itemNum, imgPath) {
+  const item = document.createElement("img");
+  item.setAttribute("class", itemName);
+  item.setAttribute("data-id", itemNum);
+  item.setAttribute("src", imgPath);
+
+  const randomWidth =
+    Math.random() * (btmSect.getBoundingClientRect().width - item.width);
+  const randomHeight =
+    Math.random() * (btmSect.getBoundingClientRect().height - item.height);
+  item.style.left = `${randomWidth}px`;
+  item.style.top = `${randomHeight}px`;
+  return item;
+}
+
 // Initiate the game setting
 function initSetting() {
   btmSect.classList.remove("prevent");
@@ -51,7 +67,7 @@ function stopGame() {
   stopGameTimer();
   var winAudio = new Audio("./sound/alert.wav");
   winAudio.play();
-  retryPopup();
+  popUp("retry");
 }
 
 function stopGameTimer() {
@@ -87,7 +103,7 @@ function updateTimerText(time) {
   const seconds = time % 60;
   gameTimer.innerText = `${minutes} : ${seconds}`;
   if (gameTimer.innerText == "0 : 0") {
-    retryPopup();
+    popUp("retry");
     var winAudio = new Audio("./sound/alert.wav");
     winAudio.play();
   }
@@ -101,7 +117,7 @@ function removeBugs() {
       var bugPullAudio = new Audio("./sound/bug_pull.mp3");
       bugPullAudio.play();
       bug.classList.add("invisible");
-      lostPopup();
+      popUp("lost");
       stopGameTimer();
     });
   });
@@ -120,27 +136,11 @@ function removeCarrots(carrots, count) {
         console.log("completed");
         var winAudio = new Audio("./sound/game_win.mp3");
         winAudio.play();
-        wonPopup();
+        popUp("won");
         stopGameTimer();
       }
     });
   });
-}
-
-// create items
-function createItems(itemName, itemNum, imgPath) {
-  const item = document.createElement("img");
-  item.setAttribute("class", itemName);
-  item.setAttribute("data-id", itemNum);
-  item.setAttribute("src", imgPath);
-
-  const randomWidth =
-    Math.random() * (btmSect.getBoundingClientRect().width - item.width);
-  const randomHeight =
-    Math.random() * (btmSect.getBoundingClientRect().height - item.height);
-  item.style.left = `${randomWidth}px`;
-  item.style.top = `${randomHeight}px`;
-  return item;
 }
 
 // retry the game
@@ -148,18 +148,32 @@ retryBtn.addEventListener("click", () => {
   initSetting();
 });
 
-// Notify user won or lost or retry the game
-function wonPopup() {
-  result.classList.remove("invisible");
-  controlBtn.classList.add("invisible");
-  message.innerText = "YOU WON!";
-}
-function lostPopup() {
-  result.classList.remove("invisible");
-  controlBtn.classList.add("invisible");
-  message.innerText = "YOU LOST";
-}
-function retryPopup() {
-  result.classList.remove("invisible");
-  message.innerText = "RETRY?";
+// // Notify user won or lost or retry the game
+// function wonPopup() {
+//   result.classList.remove("invisible");
+//   controlBtn.classList.add("invisible");
+//   message.innerText = "YOU WON!";
+// }
+// function lostPopup() {
+//   result.classList.remove("invisible");
+//   controlBtn.classList.add("invisible");
+//   message.innerText = "YOU LOST";
+// }
+// function retryPopup() {
+//   result.classList.remove("invisible");
+//   message.innerText = "RETRY?";
+// }
+
+// Popup contain the result
+function popUp(outcome) {
+  if (outcome == "won") {
+    controlBtn.classList.add("invisible");
+    message.innerText = "YOU WON!";
+  } else if (outcome == "lost") {
+    result.classList.remove("invisible");
+    controlBtn.classList.add("invisible");
+    message.innerText = "YOU LOST";
+  } else if (outcome == "retry") {
+    message.innerText = "RETRY?";
+  }
 }
