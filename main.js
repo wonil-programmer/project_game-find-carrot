@@ -13,6 +13,9 @@ const retryBtn = document.querySelector(".retryBtn");
 const result = document.querySelector(".result");
 const message = document.querySelector(".message");
 
+let count;
+let started = false;
+
 var bgSound = new Audio("sound/bg.mp3");
 var bugSound = new Audio("sound/bug_pull.mp3");
 var carrotSound = new Audio("sound/carrot_pull.mp3");
@@ -28,8 +31,6 @@ function placement(count) {
       createItems("carrot", i, "img/carrot.png", CARROT_SIZE)
     );
   }
-  const carrots = document.querySelectorAll(".carrot");
-  return carrots;
 }
 
 // create carrots and bugs as element
@@ -50,6 +51,7 @@ function createItems(itemName, itemNum, imgPath, itemSize) {
 
 // Initiate the game setting
 function initSetting() {
+  started = false;
   controlBtn.classList.remove("invisible");
   playSquare.classList.remove("fa-square");
   playSquare.classList.add("fa-play");
@@ -64,21 +66,20 @@ function initSetting() {
 controlBtn.addEventListener("click", () => {
   if (playSquare.classList.contains("fa-play")) {
     startGame();
-  } else {
+  } else if (playSquare.classList.contains("fa-square")) {
     stopGame();
   }
 });
 
 // Start the game
 function startGame() {
+  started = true;
   audioPlay(bgSound);
-  let count = Math.ceil(Math.random() * 5 + 5);
+  count = Math.ceil(Math.random() * 5 + 5);
   playSquare.classList.remove("fa-play");
   playSquare.classList.add("fa-square");
   startGameTimer(count);
-  const carrotsNode = placement(count);
-  removeCarrots(carrotsNode, count);
-  removeBugs();
+  placement(count);
 }
 
 // Start the game timer
@@ -122,39 +123,52 @@ function stopGameTimer() {
   clearInterval(timer);
 }
 
-// Remove existing carrots
-function removeCarrots(carrots, count) {
-  carrots.forEach((carrot) => {
-    carrot.addEventListener("click", () => {
-      carrot.classList.add("invisible");
-      audioPlay(carrotSound);
-      count--;
-      countNum.innerHTML = `${count}`;
-      if (count == 0) {
-        audioPlay(winSound);
-        popUp("won");
-        stopGameTimer();
-        btmSect.classList.add("deact");
-        audioStop(bgSound);
-      }
-    });
-  });
-}
-// Remove existing bugs
-function removeBugs() {
-  const bugs = document.querySelectorAll(".bug");
-  bugs.forEach((bug) => {
-    bug.addEventListener("click", () => {
-      bug.classList.add("invisible");
-      audioPlay(bugSound);
-      popUp("lost");
-      stopGameTimer();
-      btmSect.classList.add("deact");
-      audioStop(bgSound);
-    });
-  });
+// When an item located in bottom section clicked
+btmSect.addEventListener("click", onFieldClick);
+function onFieldClick(event) {
+  if (!started) {
+    return;
+  }
+  const target = event.target;
+  if (target.matches(".carrot")) {
+    removeCarrot(target);
+  } else if (target.matches(".bug")) {
+    removeBug(target);
+  }
 }
 
+// Remove targeted carrot
+function removeCarrot(carrot) {
+  carrot.classList.add("invisible");
+  audioPlay(carrotSound);
+  count--;
+  countNum.innerHTML = `${count}`;
+  if (count == 0) {
+    winGame();
+  }
+}
+// Remove targeted bug
+function removeBug(bug) {
+  bug.classList.add("invisible");
+  audioPlay(bugSound);
+  lostGame();
+}
+
+// Win the game
+function winGame() {
+  audioPlay(winSound);
+  popUp("won");
+  stopGameTimer();
+  btmSect.classList.add("deact");
+  audioStop(bgSound);
+}
+// Lost the game
+function lostGame() {
+  audioStop(bgSound);
+  stopGameTimer();
+  btmSect.classList.add("deact");
+  popUp("lost");
+}
 // Retry the game
 retryBtn.addEventListener("click", () => {
   initSetting();
