@@ -13,6 +13,12 @@ const retryBtn = document.querySelector(".retryBtn");
 const result = document.querySelector(".result");
 const message = document.querySelector(".message");
 
+var bgSound = new Audio("sound/bg.mp3");
+var bugSound = new Audio("sound/bug_pull.mp3");
+var carrotSound = new Audio("sound/carrot_pull.mp3");
+var alertSound = new Audio("sound/alert.wav");
+var winSound = new Audio("sound/game_win.mp3");
+
 // Arrange each items using for loop
 function placement(count) {
   countNum.innerHTML = `${count}`;
@@ -65,6 +71,7 @@ controlBtn.addEventListener("click", () => {
 
 // Start the game
 function startGame() {
+  audioPlay(bgSound);
   let count = Math.ceil(Math.random() * 5 + 5);
   playSquare.classList.remove("fa-play");
   playSquare.classList.add("fa-square");
@@ -99,16 +106,16 @@ function updateTimerText(time) {
 // Alert when time is over
 function timeOver() {
   popUp("retry");
-  var winAudio = new Audio("./sound/alert.wav");
   btmSect.classList.add("deact");
 }
 
 // Stop the game
 function stopGame() {
   stopGameTimer();
-  audioPlay("sound/alert.wav");
+  audioPlay(alertSound);
   popUp("retry");
   btmSect.classList.add("deact");
+  audioStop(bgSound);
 }
 
 function stopGameTimer() {
@@ -120,29 +127,30 @@ function removeCarrots(carrots, count) {
   carrots.forEach((carrot) => {
     carrot.addEventListener("click", () => {
       carrot.classList.add("invisible");
-      audioPlay("sound/carrot_pull.mp3");
+      audioPlay(carrotSound);
       count--;
       countNum.innerHTML = `${count}`;
       if (count == 0) {
-        audioPlay("sound/game_win.mp3");
+        audioPlay(winSound);
         popUp("won");
         stopGameTimer();
         btmSect.classList.add("deact");
+        audioStop(bgSound);
       }
     });
   });
 }
-
 // Remove existing bugs
 function removeBugs() {
   const bugs = document.querySelectorAll(".bug");
   bugs.forEach((bug) => {
     bug.addEventListener("click", () => {
       bug.classList.add("invisible");
-      audioPlay("sound/bug_pull.mp3");
+      audioPlay(bugSound);
       popUp("lost");
       stopGameTimer();
       btmSect.classList.add("deact");
+      audioStop(bgSound);
     });
   });
 }
@@ -153,9 +161,13 @@ retryBtn.addEventListener("click", () => {
 });
 
 // Play an audio
-function audioPlay(audioPath) {
-  var audio = new Audio(audioPath);
-  audio.play();
+function audioPlay(sound) {
+  sound.currentTime = 0;
+  sound.play();
+}
+// Stop an audio
+function audioStop(sound) {
+  sound.pause();
 }
 
 // Popup contain the result
