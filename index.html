@@ -13,7 +13,7 @@
       crossorigin="anonymous"
     />
     <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
-    <script src="main.js" defer></script>
+    <script type="module" src="src/main.js" defer></script>
   </head>
   <body>
     <div class="background">
@@ -28,11 +28,11 @@
       </section>
       <section class="bottom__section"></section>
     </div>
-    <div class="result invisible">
-      <div class="retryBtn">
+    <div class="pop-up pop-up--hide">
+      <div class="pop-up__retryBtn">
         <i class="fas fa-redo"></i>
       </div>
-      <span class="message"></span>
+      <span class="pop-up__message"></span>
     </div>
   </body>
 </html>

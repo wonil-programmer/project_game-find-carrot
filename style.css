@@ -123,7 +123,7 @@ body {
   display: none;
 }
 
-.result {
+.pop-up {
   background-color: #80808090;
   width: 300px;
   height: 160px;
@@ -137,11 +137,11 @@ body {
   z-index: 1;
 }
 
-.result.invisible {
+.pop-up.pop-up--hide {
   display: none;
 }
 
-.retryBtn {
+.pop-up__retryBtn {
   background-color: beige;
   font-size: 40px;
   width: 60px;
@@ -155,11 +155,11 @@ body {
   transition: transform 200ms ease-in;
 }
 
-.retryBtn:hover {
+.pop-up__retryBtn:hover {
   transform: scale(1.05);
 }
 
-.message {
+.pop-up__message {
   font-size: 28px;
   color: white;
 }

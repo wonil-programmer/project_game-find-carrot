@@ -1,5 +1,5 @@
 "use strict";
-
+import PopUp from "./popup.js";
 let timer = undefined;
 
 const CARROT_SIZE = 80;
@@ -9,20 +9,38 @@ const playSquare = document.querySelector("#playSquare");
 const gameTimer = document.querySelector(".gameTimer");
 const countNum = document.querySelector(".count");
 const btmSect = document.querySelector(".bottom__section");
-const retryBtn = document.querySelector(".retryBtn");
-const result = document.querySelector(".result");
-const message = document.querySelector(".message");
+const popUp = document.querySelector(".pop-up");
+const popUpText = document.querySelector(".pop-up__message");
+const popUpRefresh = document.querySelector(".pop-up__retryBtn");
 
 let count;
 let started = false;
 
-var bgSound = new Audio("sound/bg.mp3");
-var bugSound = new Audio("sound/bug_pull.mp3");
-var carrotSound = new Audio("sound/carrot_pull.mp3");
-var alertSound = new Audio("sound/alert.wav");
-var winSound = new Audio("sound/game_win.mp3");
+const bgSound = new Audio("sound/bg.mp3");
+const bugSound = new Audio("sound/bug_pull.mp3");
+const carrotSound = new Audio("sound/carrot_pull.mp3");
+const alertSound = new Audio("sound/alert.wav");
+const winSound = new Audio("sound/game_win.mp3");
 
-// Arrange each items using for loop
+// Make an object from Popup class. It contains the result of game
+const gameFinishBanner = new PopUp();
+gameFinishBanner.setClickListener(() => {
+  initSetting();
+});
+
+// Initiate the game setting
+function initSetting() {
+  started = false;
+  controlBtn.classList.remove("invisible");
+  playSquare.classList.remove("fa-square");
+  playSquare.classList.add("fa-play");
+  gameTimer.innerText = "0 : ?";
+  countNum.innerText = "?";
+  btmSect.classList.remove("deact");
+  btmSect.innerHTML = "";
+}
+
+// Arrange each items on game field(bottom section) using for loop
 function placement(count) {
   countNum.innerHTML = `${count}`;
   for (let i = 0; i < count; i++) {
@@ -49,19 +67,6 @@ function createItems(itemName, itemNum, imgPath, itemSize) {
   return item;
 }
 
-// Initiate the game setting
-function initSetting() {
-  started = false;
-  controlBtn.classList.remove("invisible");
-  playSquare.classList.remove("fa-square");
-  playSquare.classList.add("fa-play");
-  gameTimer.innerText = "0 : ?";
-  countNum.innerText = "?";
-  btmSect.classList.remove("deact");
-  btmSect.innerHTML = "";
-  result.classList.add("invisible");
-}
-
 // Start or stop the game
 controlBtn.addEventListener("click", () => {
   if (playSquare.classList.contains("fa-play")) {
@@ -81,7 +86,6 @@ function startGame() {
   startGameTimer(count);
   placement(count);
 }
-
 // Start the game timer
 function startGameTimer(GAME_DURATION_SEC) {
   let remainingTimeSec = GAME_DURATION_SEC;
@@ -106,7 +110,9 @@ function updateTimerText(time) {
 
 // Alert when time is over
 function timeOver() {
-  popUp("retry");
+  audioPlay(alertSound);
+  audioStop(bgSound);
+  gameFinishBanner.showWithText("RETRY?");
   btmSect.classList.add("deact");
 }
 
@@ -114,7 +120,7 @@ function timeOver() {
 function stopGame() {
   stopGameTimer();
   audioPlay(alertSound);
-  popUp("retry");
+  gameFinishBanner.showWithText("REPLAY?");
   btmSect.classList.add("deact");
   audioStop(bgSound);
 }
@@ -123,7 +129,7 @@ function stopGameTimer() {
   clearInterval(timer);
 }
 
-// When an item located in bottom section clicked
+// Item located in bottom section clicked
 btmSect.addEventListener("click", onFieldClick);
 function onFieldClick(event) {
   if (!started) {
@@ -144,35 +150,28 @@ function removeCarrot(carrot) {
   count--;
   countNum.innerHTML = `${count}`;
   if (count == 0) {
-    winGame();
+    finishGame("won");
   }
 }
 // Remove targeted bug
 function removeBug(bug) {
   bug.classList.add("invisible");
   audioPlay(bugSound);
-  lostGame();
+  finishGame("lost");
 }
 
-// Win the game
-function winGame() {
-  audioPlay(winSound);
-  popUp("won");
+// finish the game
+function finishGame(result) {
+  if (result === "won") {
+    audioPlay(winSound);
+    gameFinishBanner.showWithText("YOU WON!");
+  } else {
+    gameFinishBanner.showWithText("YOU LOST");
+  }
   stopGameTimer();
   btmSect.classList.add("deact");
   audioStop(bgSound);
 }
-// Lost the game
-function lostGame() {
-  audioStop(bgSound);
-  stopGameTimer();
-  btmSect.classList.add("deact");
-  popUp("lost");
-}
-// Retry the game
-retryBtn.addEventListener("click", () => {
-  initSetting();
-});
 
 // Play an audio
 function audioPlay(sound) {
@@ -182,18 +181,4 @@ function audioPlay(sound) {
 // Stop an audio
 function audioStop(sound) {
   sound.pause();
-}
-
-// Popup contain the result
-function popUp(outcome) {
-  result.classList.remove("invisible");
-  if (outcome == "won") {
-    controlBtn.classList.add("invisible");
-    message.innerText = "YOU WON!";
-  } else if (outcome == "lost") {
-    controlBtn.classList.add("invisible");
-    message.innerText = "YOU LOST";
-  } else if (outcome == "retry") {
-    message.innerText = "RETRY?";
-  }
 }
