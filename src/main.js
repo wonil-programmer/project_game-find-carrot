@@ -1,5 +1,7 @@
 "use strict";
 import PopUp from "./popup.js";
+import Field from "./field.js";
+
 let timer = undefined;
 
 const CARROT_SIZE = 80;
@@ -25,46 +27,37 @@ const winSound = new Audio("sound/game_win.mp3");
 // Make an object from Popup class. It contains the result of game
 const gameFinishBanner = new PopUp();
 gameFinishBanner.setClickListener(() => {
-  initSetting();
+  initGame();
 });
 
+const gameField = new Field();
+gameField.setClickListener(onItemClick);
+
+// Item located in bottom section clicked
+function onItemClick(item) {
+  if (!started) {
+    return;
+  }
+  if (item === "carrot") {
+    count--;
+    countNum.innerHTML = `${count}`;
+    if (count == 0) {
+      finishGame("won");
+    }
+  } else if (item === "bug") {
+    finishGame("lost");
+  }
+}
+
 // Initiate the game setting
-function initSetting() {
+function initGame() {
   started = false;
   controlBtn.classList.remove("invisible");
   playSquare.classList.remove("fa-square");
   playSquare.classList.add("fa-play");
   gameTimer.innerText = "0 : ?";
   countNum.innerText = "?";
-  btmSect.classList.remove("deact");
-  btmSect.innerHTML = "";
-}
-
-// Arrange each items on game field(bottom section) using for loop
-function placement(count) {
-  countNum.innerHTML = `${count}`;
-  for (let i = 0; i < count; i++) {
-    btmSect.appendChild(createItems("bug", i, "img/bug.png", BUG_SIZE));
-    btmSect.appendChild(
-      createItems("carrot", i, "img/carrot.png", CARROT_SIZE)
-    );
-  }
-}
-
-// create carrots and bugs as element
-function createItems(itemName, itemNum, imgPath, itemSize) {
-  const item = document.createElement("img");
-  item.setAttribute("class", itemName);
-  item.setAttribute("data-id", itemNum);
-  item.setAttribute("src", imgPath);
-
-  const randomWidth =
-    Math.random() * (btmSect.getBoundingClientRect().width - itemSize);
-  const randomHeight =
-    Math.random() * (btmSect.getBoundingClientRect().height - itemSize);
-  item.style.left = `${randomWidth}px`;
-  item.style.top = `${randomHeight}px`;
-  return item;
+  gameField.init(CARROT_SIZE, BUG_SIZE);
 }
 
 // Start or stop the game
@@ -84,8 +77,20 @@ function startGame() {
   playSquare.classList.remove("fa-play");
   playSquare.classList.add("fa-square");
   startGameTimer(count);
-  placement(count);
+  countNum.innerHTML = `${count}`;
+  addItems();
 }
+
+// Arrange each items on game field(bottom section) using for loop
+function addItems() {
+  for (let i = 0; i < count; i++) {
+    btmSect.appendChild(gameField._createItems("bug", "img/bug.png", BUG_SIZE));
+    btmSect.appendChild(
+      gameField._createItems("carrot", "img/carrot.png", CARROT_SIZE)
+    );
+  }
+}
+
 // Start the game timer
 function startGameTimer(GAME_DURATION_SEC) {
   let remainingTimeSec = GAME_DURATION_SEC;
@@ -113,6 +118,7 @@ function timeOver() {
   audioPlay(alertSound);
   audioStop(bgSound);
   gameFinishBanner.showWithText("RETRY?");
+  controlBtn.classList.add("invisible");
   btmSect.classList.add("deact");
 }
 
@@ -121,43 +127,13 @@ function stopGame() {
   stopGameTimer();
   audioPlay(alertSound);
   gameFinishBanner.showWithText("REPLAY?");
+  controlBtn.classList.add("invisible");
   btmSect.classList.add("deact");
   audioStop(bgSound);
 }
 
 function stopGameTimer() {
   clearInterval(timer);
-}
-
-// Item located in bottom section clicked
-btmSect.addEventListener("click", onFieldClick);
-function onFieldClick(event) {
-  if (!started) {
-    return;
-  }
-  const target = event.target;
-  if (target.matches(".carrot")) {
-    removeCarrot(target);
-  } else if (target.matches(".bug")) {
-    removeBug(target);
-  }
-}
-
-// Remove targeted carrot
-function removeCarrot(carrot) {
-  carrot.classList.add("invisible");
-  audioPlay(carrotSound);
-  count--;
-  countNum.innerHTML = `${count}`;
-  if (count == 0) {
-    finishGame("won");
-  }
-}
-// Remove targeted bug
-function removeBug(bug) {
-  bug.classList.add("invisible");
-  audioPlay(bugSound);
-  finishGame("lost");
 }
 
 // finish the game
