@@ -30,7 +30,7 @@ body {
   height: 50%;
 }
 
-.controlBtn {
+.gameBtn {
   background-color: beige;
   border: 3px solid black;
   border-radius: 10px;
@@ -44,14 +44,14 @@ body {
   cursor: pointer;
 }
 
-.controlBtn:hover {
+.gameBtn:hover {
   transform: scale(1.05);
 }
-.controlBtn.invisible {
+.gameBtn.invisible {
   visibility: hidden;
 }
 
-#playSquare {
+#btnSquare {
   font-size: 28px;
 }
 
@@ -84,7 +84,7 @@ body {
   cursor: auto;
 }
 
-.count {
+.gameCount {
   font-size: 32px;
   line-height: 50px;
 }

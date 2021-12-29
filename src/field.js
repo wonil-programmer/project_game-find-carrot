@@ -1,8 +1,9 @@
 "use strict";
 
-const bugSound = new Audio("sound/bug_pull.mp3");
-const carrotSound = new Audio("sound/carrot_pull.mp3");
+import * as sound from "./sound.js";
 
+const CARROT_SIZE = 80;
+const BUG_SIZE = 50;
 export default class Field {
   constructor() {
     this.field = document.querySelector(".bottom__section");
@@ -10,11 +11,9 @@ export default class Field {
     this.field.addEventListener("click", (event) => this.onClick(event));
   }
 
-  init(CARROT_SIZE, BUG_SIZE) {
+  initField() {
     this.field.innerHTML = "";
     this.field.classList.remove("deact");
-    this._createItems("carrot", "img/carrot.png", CARROT_SIZE);
-    this._createItems("bug", "img/bug.png", BUG_SIZE);
   }
 
   setClickListener(onItemClick) {
@@ -33,22 +32,30 @@ export default class Field {
     return item;
   }
 
+  // Arrange each items on game field(bottom section) using for loop
+  addItems(itemCount) {
+    for (let i = 0; i < itemCount; i++) {
+      this.field.appendChild(this._createItems("bug", "img/bug.png", BUG_SIZE));
+      this.field.appendChild(
+        this._createItems("carrot", "img/carrot.png", CARROT_SIZE)
+      );
+    }
+  }
+
   onClick(event) {
     const target = event.target;
     if (target.matches(".carrot")) {
-      audioPlay(carrotSound);
+      sound.playCarrot();
       target.remove();
       this.onItemClick && this.onItemClick("carrot");
     } else if (target.matches(".bug")) {
-      audioPlay(bugSound);
+      sound.playBug();
       target.remove();
       this.onItemClick && this.onItemClick("bug");
     }
   }
-}
 
-// Play an audio
-function audioPlay(sound) {
-  sound.currentTime = 0;
-  sound.play();
+  deact() {
+    this.field.classList.add("deact");
+  }
 }
