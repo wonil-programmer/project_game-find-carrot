@@ -4,6 +4,11 @@ import * as sound from "./sound.js";
 
 const CARROT_SIZE = 80;
 const BUG_SIZE = 50;
+
+export const ItemType = Object.freeze({
+  carrot: "carrot",
+  bug: "bug",
+});
 export default class Field {
   constructor() {
     this.field = document.querySelector(".bottom__section");
@@ -47,11 +52,11 @@ export default class Field {
     if (target.matches(".carrot")) {
       sound.playCarrot();
       target.remove();
-      this.onItemClick && this.onItemClick("carrot");
+      this.onItemClick && this.onItemClick(ItemType.carrot);
     } else if (target.matches(".bug")) {
       sound.playBug();
       target.remove();
-      this.onItemClick && this.onItemClick("bug");
+      this.onItemClick && this.onItemClick(ItemType.bug);
     }
   }
 
