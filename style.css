@@ -5,110 +5,152 @@
   box-sizing: border-box;
 }
 
+/* 캔버스 */
 body {
+  /* 디자인 */
   background-color: black;
+  /* 크기 */
   min-width: 1000px;
   height: 500px;
+  /* 텍스트 */
   text-align: center;
 }
 
+/* 배경화면 */
 .background {
-  background: url(img/background.png) center/cover;
-  margin: auto;
-  margin-top: 30px;
+  /* 이미지 */
+  background: url(img/background.png) center/cover; 
+  /* 디자인 */
+  border-radius: 20px;
+  /* 크기 */
   width: 800px;
   height: 500px;
-  border-radius: 20px;
+  /* 박스모델 */
+  margin: auto;
+  margin-top: 30px;
 }
 
-/* Top Section */
+/* 상단부 */
 .top__section {
+  /* 정렬방식 */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  /* 크기 */
   height: 50%;
 }
 
+/* 버튼 기본 스타일링 */
+/* 기본 속성 */
 .gameBtn {
+  /* 디자인 */
   background-color: beige;
   border: 3px solid black;
   border-radius: 10px;
+  /* 크기 */
   width: 50px;
   height: 50px;
+  /* 박스모델 */
   margin: 10px;
+  /* 정렬방식 */
   display: flex;
   justify-content: center;
   align-items: center;
+  /* 애니메이션 */
   transition: transform 200ms ease-in-out;
+  /* 커서모드 */
   cursor: pointer;
 }
-
+/* :hover - 크기 변화 애니메이션 지정 */
 .gameBtn:hover {
   transform: scale(1.05);
 }
+/* .invisible - 가시성을 숨김으로 지정 */
 .gameBtn.invisible {
   visibility: hidden;
 }
 
+/* 시작 및 정지 버튼 */
 #btnSquare {
   font-size: 28px;
 }
 
+/* 타이머 */
 .gameTimer {
+  /* 디자인 */
   background-color: beige;
   border: 3px solid black;
   border-radius: 8px;
+  /* 텍스트 */
   font-size: 24px;
   font-weight: bold;
+  text-align: center;
+  /* 크기 */
   width: 80px;
   height: 50px;
-  margin: 10px;
-  text-align: center;
   line-height: 40px;
-  user-select: none;
+  /* 박스모델 */
+  margin: 10px;
+  /* 텍스트 선택 금지 */
+  user-select: none; 
+  /* 커서모드 */
   cursor: auto;
 }
 
+/* 카운터 */
 .counter {
+  /* 디자인 */
   background-color: orange;
-  width: 50px;
-  height: 50px;
-  margin: 10px;
   border: 3px solid black;
   border-radius: 50%;
+  /* 크기 */
+  width: 50px;
+  height: 50px;
+  /* 박스모델 */
+  margin: 10px;
+  /* 정렬방식 */
   display: flex;
   justify-content: center;
   align-items: center;
+  /* 텍스트 선택 금지 */
   user-select: none;
+  /* 커서모드 */
   cursor: auto;
 }
-
+/* 카운터 내 카운트 숫자 */
 .gameCount {
   font-size: 32px;
   line-height: 50px;
 }
 
-/* Bottom Section */
+/* 하단부 */
 .bottom__section {
+  /* 크기 지정 */
   width: 100%;
   height: 50%;
+  /* 위치지정 */
   position: relative;
+  /* 정렬방식 */
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
+/* .deact - 포인터 이벤트 없음으로 지정 */
 .bottom__section.deact {
   pointer-events: none;
 }
 
+/* 필드 내 아이템(벌레, 당근) */
 .bug,
 .carrot {
   font-size: 10px;
   position: absolute;
+  /* 깊이 */
   z-index: 0;
+  /* 커서모드 */
   cursor: grab;
+  /* 텍스트 선택 금지 */
   user-select: none;
   transition: transform 100ms ease-in;
 }
@@ -123,42 +165,54 @@ body {
   display: none;
 }
 
+/* 팝업창 */
 .pop-up {
+  /* 디자인 */
   background-color: #80808090;
+  border-radius: 20px;
+  /* 크기 */
   width: 300px;
   height: 160px;
+  /* 박스모델 */
   margin: auto;
+  /* 위치이동 */
   transform: translateY(-150%);
+  /* 정렬방식 */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  border-radius: 20px;
+  /* 깊이 */
   z-index: 1;
 }
-
+/* .pop-up--hide - 디스플레이를 없음으로 지정 */
 .pop-up.pop-up--hide {
   display: none;
 }
-
+/* 팝업 내 다시시작 버튼 */
 .pop-up__retryBtn {
+  /* 디자인 */
   background-color: beige;
-  font-size: 40px;
   width: 60px;
   height: 60px;
   border-radius: 10px;
   border: 2px solid black;
+  /* 텍스트 */
+  font-size: 40px;
+  /* 정렬방식 */
   display: flex;
   justify-content: center;
   align-items: center;
+  /* 커서모드 */
   cursor: pointer;
+  /* 애니메이션 */
   transition: transform 200ms ease-in;
 }
-
+/* :hover - 크기 변화 애니메이션 지정 */
 .pop-up__retryBtn:hover {
   transform: scale(1.05);
 }
-
+/* 팝업 내 메시지 */
 .pop-up__message {
   font-size: 28px;
   color: white;
